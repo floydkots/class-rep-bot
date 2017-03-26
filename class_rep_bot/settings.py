@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from dotenv import load_dotenv, find_dotenv
+import dj_database_url
+
 load_dotenv(find_dotenv())
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +30,12 @@ SECRET_KEY = '+uuj=s8)eiuma!&3ein5if2@xhhmy53e+*02o)!1_1ze5j&21^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'class-rep-bot.herokuapp.com',
+    'class-rep.kots.io'
+]
 
 
 # Application definition
@@ -86,6 +94,9 @@ DATABASES = {
     }
 }
 
+# Update database configuration with $DATABASE_URL
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -124,6 +135,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # AFRICASTALKING CREDENTIALS
 USERNAME = os.environ.get("username")
@@ -134,6 +148,9 @@ HOST = "smtp.sendgrid.net"
 USER = os.environ.get("USER")
 PASSWORD = os.environ.get("PASSWORD")
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+EMAIL_USE_TLS = True
+SERVER_EMAIL = 'webmaster@class-rep-bot.kots.io'
+ADMINS = (('Floyd Kots', 'floydkots@gmail.com'),)
 
 # CLASSREP_BOT TOKEN
 CLASSREP_BOT_TOKEN = os.environ.get("TOKEN")
