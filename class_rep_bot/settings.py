@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'timetable.apps.TimetableConfig',
+    'chats.apps.ChatsConfig',
 ]
 
 MIDDLEWARE = [
@@ -108,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -121,3 +124,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# AFRICASTALKING CREDENTIALS
+USERNAME = os.environ.get("username")
+APIKEY = os.environ.get("apikey")
+
+# SENDGRID CREDENTIALS
+HOST = "smtp.sendgrid.net"
+USER = os.environ.get("USER")
+PASSWORD = os.environ.get("PASSWORD")
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+
+# CLASSREP_BOT TOKEN
+CLASSREP_BOT_TOKEN = os.environ.get("TOKEN")
