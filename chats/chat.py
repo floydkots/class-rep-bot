@@ -99,7 +99,10 @@ def register(bot, update, user_data):
                 parse_mode=ParseMode.MARKDOWN
             )
         else:
-            user_data['mobile'] = '+'+update.message.contact.phone_number
+
+            user_data['mobile'] = update.message.contact.phone_number
+            if not user_data['mobile'].startswith('+'):
+                user_data['mobile'] = '+' + user_data['mobile']
 
             user_data['register'] = email
             update.message.reply_text(

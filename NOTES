@@ -9,3 +9,5 @@ I noticed that after deploying:
     be a better way to go about it.
   - In a group chat, you cannot request a phone number. So,
     registration chat must be private.
+  - Code somehow adds an additional + sign to a phone
+    number that is submitted manually.
