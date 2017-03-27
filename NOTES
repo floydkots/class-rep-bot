@@ -2,3 +2,10 @@
 2. Check for which group is going on.
 3. Encourage the user through the answers.
 4. Limit the number of commands.
+
+I noticed that after deploying:
+  - Registration failed because I had not set up a single
+    student class as admin. I wounder if there might
+    be a better way to go about it.
+  - In a group chat, you cannot request a phone number. So,
+    registration chat must be private.

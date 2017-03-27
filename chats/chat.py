@@ -9,7 +9,7 @@ from telegram import (InlineKeyboardButton, InlineKeyboardMarkup)
 REGISTER, REGISTRATION = range(0, 2)
 
 
-def start(bot, update, user_data):
+def start(bot, update, user_data, args):
     chat = GeneralChat(chat_id=update.message.chat_id)
     reply = (
         "Hi! I am your virtual class rep. "
@@ -20,6 +20,11 @@ def start(bot, update, user_data):
             "\n\nIn order to help meaningfully, I need to know a few things about you. "
             "Please /register to proceed."
             "\nLooking forward to a happy conversation."
+        )
+        user_data['init'] = REGISTER
+    elif len(args) > 0 and args[0] == 'register':
+        message = (
+            "\nLet us proceed and /register you."
         )
         user_data['init'] = REGISTER
     else:
@@ -40,6 +45,18 @@ def register(bot, update, user_data):
         chat = GeneralChat(chat_id=update.message.chat_id)
     except AttributeError:
         chat = GeneralChat(chat_id=update.callback_query.message.chat_id)
+
+    if update.message.chat.type == 'group' and update.message.chat_id == -176518514:
+        keyboard = [[InlineKeyboardButton(
+            text="Chat in Private",
+            url="http://t.me/ClassRepBot?start=register")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            "Please let's chat in private :-)",
+            reply_markup=reply_markup,
+            parse_mode=ParseMode.MARKDOWN
+        )
+        return REGISTRATION
 
     if user_data['init'] == REGISTER:
         update.message.reply_text(
@@ -67,7 +84,8 @@ def register(bot, update, user_data):
             user_data['register'] = mobile
         else:
             update.message.reply_text(
-                "Oops! Names can't start with non-alphabetical characters.",
+                "Oops! Names can't start with non-alphabetical characters.\n"
+                "You sent %s" % update.message.text[0],
                 reply_markup=ReplyKeyboardRemove(),
                 parse_mode=ParseMode.MARKDOWN
             )
@@ -273,7 +291,7 @@ def cancel(bot, update):
 
 def get_chats_conversation_handler():
     conversation_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start, pass_user_data=True)],
+        entry_points=[CommandHandler('start', start, pass_user_data=True, pass_args=True)],
         states={
             REGISTER: [
 
