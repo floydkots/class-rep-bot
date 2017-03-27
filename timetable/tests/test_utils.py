@@ -8,19 +8,28 @@ class StudentChatTestCase(TestCase):
     units = [
         ('EMT 2445', 'Research Methodology for Engineers'),
         ('EMT 2444', 'Microcontroller Programming and Applications'),
-        ('EMT 2444', 'Design of Machines and Machine Elements'),
+        ('EMT 2443', 'Design of Machines and Machine Elements'),
         ('EMT 2442', 'Introduction to Hydraulics and Pneumatics'),
         ('EMT 2441', 'Professional Ethics and Human Values'),
         ('EMT 2440', 'Manufucturing Technology I'),
         ('EMT 2439', 'Design of Mechatronic Systems II'),
-        ('ABC 1234', 'Power Electronics')
+        ('EMT 2438', 'Power Electronics')
     ]
 
     def setUp(self):
+
+        lecturer = Lecturer.objects.create(
+            name='Dr. Somebody Someone',
+            mobile='+254700000000',
+            email='lec@staff.jkuat.ac.ke',
+        )
+
         units = []
         for item in self.units:
             units.append(Unit(code=item[0], name=item[1]))
         Unit.objects.bulk_create(units)
+
+        Unit.objects.get(code='EMT 2445').lecturer = lecturer
 
         Course.objects.create(
             name='BSc. Mechatronics Engineering'
@@ -44,12 +53,6 @@ class StudentChatTestCase(TestCase):
             username="studsome",
             chat_id=123456789
         )
-
-        Lecturer.objects.create(
-            name='Dr. Somebody Someone',
-            mobile='+254712345678',
-            email='lec@staff.jkuat.ac.ke',
-        ).units.add(Unit.objects.get(code='EMT 2445')),
 
         Period.objects.create(
             start=datetime.strptime('07:00:00', '%H:%M:%S').time(),
@@ -88,7 +91,7 @@ class StudentChatTestCase(TestCase):
 
     def test_get_lessons(self):
         lesson = Lesson.objects.get(pk=1)
-        lesson_list = [(lesson.period, lesson.unit, lesson.venue, lesson.type, lesson.lecturer)]
+        lesson_list = [(str(lesson.period), str(lesson.unit), str(lesson.venue), ('Theory', 'Practical')[lesson.type], str(lesson.lecturer)) or ""]
 
         self.assertEqual(self.student_chat.get_lessons(), lesson_list)
 
