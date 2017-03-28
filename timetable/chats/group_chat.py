@@ -48,31 +48,36 @@ def get_inline_markup(frame=None):
 
 def lessons(bot, update):
     # TODO find a way to determine if it's a lecturer or student, currently assuming a student
-    try:
-        chat = StudentChatting(chat_id=update.message.chat_id)
+
+    if update.message.chat.type == 'private':
+        chat_id = update.message.chat_id
+    else:
+        chat_id = update.message.from_user.id
+    chat = StudentChatting(chat_id=chat_id)
+    if chat.student:
         message = chat.get_day_lessons_string(today())
         reply_markup = get_inline_markup(frame="Today")
         update.message.reply_text(message,
                                   reply_markup=reply_markup,
                                   parse_mode=ParseMode.MARKDOWN)
-    except Student.DoesNotExist:
-        if update.message.chat.type == 'group' and update.message.chat_id == -176518514:
-            message = "Please register first. Let's chat in private"
-            keyboard = [[InlineKeyboardButton(
-                text="Chat in Private",
-                url="http://t.me/ClassRepBot?start=register")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            update.message.reply_text(
-                message,
-                reply_markup=reply_markup,
-                parse_mode=ParseMode.MARKDOWN
-            )
+    elif update.message.chat.type == 'group' and update.message.chat_id == -176518514:
+        message = "Please register first. Let's chat in private"
+        keyboard = [[InlineKeyboardButton(
+            text="Chat in Private",
+            url="http://t.me/ClassRepBot?start=register")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            message,
+            reply_markup=reply_markup,
+            parse_mode=ParseMode.MARKDOWN
+        )
 
 
 def lessons_particular(bot, update):
-    try:
-        chat = StudentChatting(chat_id=update.callback_query.message.chat_id)
-        query = update.callback_query
+    chat_id = update.callback_query.from_user.id
+    chat = StudentChatting(chat_id=chat_id)
+    query = update.callback_query
+    if chat.student:
         if query.data == 'Today':
             bot.editMessageText(text=chat.get_day_lessons_string(today()),
                                 chat_id=query.message.chat_id,
@@ -85,18 +90,17 @@ def lessons_particular(bot, update):
                                 message_id=query.message.message_id,
                                 reply_markup=get_inline_markup(frame=query.data),
                                 parse_mode=ParseMode.MARKDOWN)
-    except Student.DoesNotExist:
-        if update.message.chat.type == 'group' and update.message.chat_id == -176518514:
-            message = "Please register first. Let's chat in private"
-            keyboard = [[InlineKeyboardButton(
-                text="Chat in Private",
-                url="http://t.me/ClassRepBot?start=register")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            update.message.reply_text(
-                message,
-                reply_markup=reply_markup,
-                parse_mode=ParseMode.MARKDOWN
-            )
+    elif update.message.chat.type == 'group' and update.message.chat_id == -176518514:
+        message = "Please register first. Let's chat in private"
+        keyboard = [[InlineKeyboardButton(
+            text="Chat in Private",
+            url="http://t.me/ClassRepBot?start=register")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            message,
+            reply_markup=reply_markup,
+            parse_mode=ParseMode.MARKDOWN
+        )
 
 
 def get_group_chat_handlers():
