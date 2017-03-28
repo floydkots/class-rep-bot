@@ -1,14 +1,16 @@
 import os
+
 import django
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "class_rep_bot.settings")
 django.setup()
 
-import logging
 from django.conf import settings
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode)
+from telegram import (ReplyKeyboardRemove, ParseMode)
 from telegram.ext import (Updater, CommandHandler)
-from timetable.chat import get_timetable_conversation_handler
+from timetable.chats.private_chat import get_timetable_conversation_handler
 from chats.chat import get_chats_conversation_handler
+from timetable.chats.group_chat import get_group_chat_handlers
 
 # logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -28,6 +30,9 @@ def general_help(bot, update):
 def main():
     updater = Updater(TOKEN)
     dp = updater.dispatcher
+
+    for handler in get_group_chat_handlers():
+        dp.add_handler(handler)
 
     dp.add_handler(CommandHandler('help', general_help))
     dp.add_handler(get_timetable_conversation_handler())

@@ -9,7 +9,6 @@ from django.core.exceptions import ValidationError
 import datetime as dt
 import calendar
 from telegram import ReplyKeyboardMarkup
-
 #  TODO doc strings
 
 
@@ -54,6 +53,11 @@ class StudentChatting(object):
             lessons.append(lesson)
 
         return lessons
+
+    def get_day_lessons(self):
+        lessons = []
+        for item in self.student.student_class.lessons.all():
+            pass
 
     def get_lessons_keyboard(self):
         return ["\n".join([ls[0], ls[1]]) for ls in self.get_lessons()]
@@ -184,6 +188,20 @@ class StudentChatting(object):
                                lessons_dict[day]).join(['*' + day.upper() + '*', '\n\n'])
             lesson_str += s_lesson
         return lesson_str
+
+    def get_day_lessons_string(self, day):
+        if day in calendar.day_name[:5]:
+            lessons = self.get_lessons()
+            l_dict = {day: []}
+            for lesson in lessons:
+                if lesson[0].startswith(day):
+                    l_dict[day].append(lesson)
+            return "".join("\n%s\n%s (%s)\n%s\n%s\n" % (l[0].split(' ', 1)[-1], l[1], l[3], l[2], l[4]) for l in
+                               l_dict[day]).join(['*TODAY\'S LESSONS*', '\n\n'])
+
+    def get_week_lessons_string(self, week=None):
+        # TODO Add a feature for week-specific edits and queries of the timetable
+        return "*THIS WEEK'S LESSONS*\n" + self.get_lessons_string()
 
     @staticmethod
     def valid_period(period):
