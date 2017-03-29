@@ -43,7 +43,7 @@ class StudentChatting(object):
             lesson = (str(item.period),
                       str(item.unit),
                       str(item.venue),
-                      ('Theory', 'Practical')[item.type],
+                      item.get_type_display(),
                       str(item.lecturer) or "")
 
             self.lessons.update(

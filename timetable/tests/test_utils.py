@@ -91,7 +91,7 @@ class StudentChatTestCase(TestCase):
 
     def test_get_lessons(self):
         lesson = Lesson.objects.get(pk=1)
-        lesson_list = [(str(lesson.period), str(lesson.unit), str(lesson.venue), ('Theory', 'Practical')[lesson.type], str(lesson.lecturer)) or ""]
+        lesson_list = [(str(lesson.period), str(lesson.unit), str(lesson.venue), lesson.get_type_display(), str(lesson.lecturer)) or ""]
 
         self.assertEqual(self.student_chat.get_lessons(), lesson_list)
 
