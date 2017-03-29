@@ -24,11 +24,11 @@ class Course(models.Model):
 
 
 class Lecturer(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     mobile = models.CharField(max_length=15, blank=True, null=True, unique=True)
-    email = models.CharField(max_length=30, blank=True, null=True, unique=True)
-    username = models.CharField(max_length=15, blank=True, null=True)
-    chat_id = models.CharField(max_length=15, blank=True, null=True, unique=True)
+    email = models.CharField(max_length=50, blank=True, null=True, unique=True)
+    username = models.CharField(max_length=50, blank=True, null=True)
+    chat_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.name or self.username
@@ -185,14 +185,14 @@ class StudentClass(models.Model):
 
 
 class Student(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     mobile = models.CharField(max_length=15, null=True, blank=True, unique=True)
-    email = models.EmailField(max_length=30, null=True, blank=True, unique=True)
+    email = models.EmailField(max_length=50, null=True, blank=True, unique=True)
 
     student_class = models.ForeignKey(to=StudentClass)
 
-    username = models.CharField(max_length=15, blank=True, null=True)
-    chat_id = models.CharField(max_length=15, blank=True, null=True, unique=True)
+    username = models.CharField(max_length=50, blank=True, null=True)
+    chat_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.name or self.username
