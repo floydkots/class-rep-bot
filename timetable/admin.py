@@ -50,6 +50,7 @@ class LecturerForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         instance = super(LecturerForm, self).save(commit=False)
+        instance.save()
         self.fields['units'].initial.update(lecturer=None)
         self.cleaned_data['units'].update(lecturer=instance)
         return instance
@@ -61,7 +62,7 @@ class LecturerAdmin(admin.ModelAdmin):
     def units(self):
         return ', '.join(str(unit) for unit in self.unit_set.all())
 
-    inlines = [UnitInline]
+    # inlines = [UnitInline]
 
     list_display = ('name', units, 'mobile', 'email', 'chat_id', 'username')
 

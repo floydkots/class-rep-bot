@@ -33,6 +33,34 @@ class Lecturer(models.Model):
     def __str__(self):
         return self.name or self.username
 
+    def clean(self):
+        """
+        Caveat: Bulk creating will not call this method.
+
+        Cleaning this way because, having blank=True, null=True and
+         unique=True on the model's fields brings a challenge.
+         The django admin form by default converts a blank field to an
+         empty string (""). This then gets saved in the database. While
+         trying to enforce database integrity by ensuring uniqueness,
+         two records with the same empty string("") in their
+         corresponding fields will be non-unique.
+
+         However, I seek to save multiple lecturers by their names
+         only, leaving the other fields truly null. The database does
+         not consider two null fields to be non-unique.
+
+         So, my solution is to explicitly check for blank fields
+         (empty strings) and set them to none, during the clean method.
+        Returns:
+
+        """
+        if not self.chat_id:
+            self.chat_id = None
+        if not self.mobile:
+            self.mobile = None
+        if not self.email:
+            self.email = None
+
 
 class Venue(models.Model):
     name = models.CharField(max_length=30, unique=True)
@@ -168,3 +196,20 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name or self.username
+
+    def clean(self):
+        """
+        Caveat: Bulk create will not call this method.
+
+        Implementing this method, for the same reasons as in the
+         clean method of class Lecturer.
+
+        Returns:
+
+        """
+        if not self.mobile:
+            self.mobile = None
+        if not self.email:
+            self.email = None
+        if not self.chat_id:
+            self.chat_id = None
