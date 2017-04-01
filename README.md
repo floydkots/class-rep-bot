@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/floydkots/class-rep-bot.svg?branch=master)](https://travis-ci.org/floydkots/class-rep-bot)
+[![codecov](https://codecov.io/gh/floydkots/class-rep-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/floydkots/class-rep-bot)
+
 # CLASS REP BOT
 
 This is the official repository of the code behind the [@ClassRepBot](http://t.me/ClassRepBot) project.
