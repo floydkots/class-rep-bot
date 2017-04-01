@@ -1,5 +1,6 @@
 certifi==2016.9.26
 click==6.6
+coverage==4.3.4
 dj-database-url==0.4.2
 Django==1.10.4
 future==0.16.0

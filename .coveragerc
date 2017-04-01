@@ -1,0 +1,15 @@
+[run]
+branch = True
+source = .
+omit =
+    # omit everything in /tests
+    /tests/*
+
+[report]
+ignore_errors = False
+omit =
+    # omit everything in /tests
+    /tests/*
+
+[html]
+directory = coverage_html_report

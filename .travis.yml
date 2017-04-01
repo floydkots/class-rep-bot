@@ -3,6 +3,12 @@ python:
   - "3.4"
   - "3.5"
 # command to install dependencies
-install: "pip install -r requirements.txt"
+install:
+  - "pip install -r requirements.txt"
+  - "pip install codecov"
 # command to run test
-script: python manage.py test
+script:
+  - coverage run manage.py test
+# command to run codecov
+after_success:
+  - codecov
