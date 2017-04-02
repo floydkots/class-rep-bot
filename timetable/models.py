@@ -24,9 +24,9 @@ class Unit(models.Model):
     course.
 
     Attributes:
-        code (str): The Unit's code as it appears in the curriculum
-        name (str): The Unit's name, more like the title
-        lecturer (:class: `timetable.models.Lecturer`):
+        code (:class:`models.CharField`): The Unit's code as it appears in the curriculum
+        name (:class:`models.CharField`): The Unit's name, more like the title
+        lecturer (:class:`timetable.models.Lecturer`): A lecturer
     """
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=50)
@@ -48,7 +48,7 @@ class Course(models.Model):
     the web interface.
 
     Attributes:
-        name (str): The name of the course, like BSc. Mechatronics Engineering
+        name (:class:`models.CharField`): The name of the course, like BSc. Mechatronics Engineering
     """
     name = models.CharField(max_length=50)
 
@@ -62,13 +62,13 @@ class Lecturer(models.Model):
     This object represents a single lecturer in the campus.
 
     Attributes:
-        name (str): The Lecturer's name
-        mobile (Optional [str]): The Lecturer's phone number, a maximum length of 15 digits, like
+        name (:class:`models.CharField`): The Lecturer's name
+        mobile (Optional [:class:`models.CharField`]): The Lecturer's phone number, a maximum length of 15 digits, like
             +254700123456
-        email (Optional [str]): The Lecturer's email. It is a (:class: `model.EmailField`) so that
+        email (Optional [:class:`models.EmailField`]): The Lecturer's email. It is a (:class: `model.EmailField`) so that
             django's :func:`~django.core.validators.EmailValidator` is used to validate it's input.
-        username (Optional [str]): This field represents the lecturer's telegram username
-        chat_id (Optional [str]): This field represents the lecturer's telegram chat id.
+        username (Optional [:class:`models.CharField`]): This field represents the lecturer's telegram username
+        chat_id (Optional [:class:`models.CharField`]): This field represents the lecturer's telegram chat id.
             Well, I'm storing it as a string, but Telegram gives it as an int. Can't seem to remember
             the logic behind that decision when I made it. Another reason I should have done these
             docs earlier.
@@ -124,9 +124,9 @@ class Venue(models.Model):
     This object represents a venue where a lesson is taught.
 
     Attributes:
-        name (str): The name of the venue as in the timetable, and the venue's literal name
-        longitude (Optional [decimal]): Represents the venues geographic longitudinal value
-        latitude (Optional [decimal]): Represents the venue's geographic latitudinal value
+        name (:class:`models.CharField`): The name of the venue as in the timetable, and the venue's literal name
+        longitude (Optional [:class:`models.DecimalField`]): Represents the venues geographic longitudinal value
+        latitude (Optional [:class:`models.DecimalField`]): Represents the venue's geographic latitudinal value
 
     The latitude and longitude fields of this class will come in handy upon integration with
     a maps application.
@@ -145,9 +145,9 @@ class Period(models.Model):
     This object represents a single period in the timetable
 
     Attributes:
-        start (datetime.time): Represents the time when the period starts.
-        stop (datetime.time): Represents the time when the period stops.
-        day (int): Represents the day of the week in which the period occurs.
+        start (:class:`models.TimeField`): Represents the time when the period starts.
+        stop (:class:`models.TimeField`): Represents the time when the period stops.
+        day (:class:`models.IntegerField`): Represents the day of the week in which the period occurs.
             This is stored as an integer, mapped to the corresponding day by the
             DAY list.
     """
@@ -176,10 +176,11 @@ class Period(models.Model):
             1. The period does not stop (end) before it starts :-)
             2. The period does not overlap other already existing periods.
 
-        Returns: None
+        Returns:
+            None
 
         Raises:
-            ValidationError: If any of the validation checks are failed
+            `ValidationError`: If any of the validation checks are failed
         """
         if self.stop <= self.start:
             raise ValidationError(_('Stop time cannot be earlier than or equal to start time.'))
@@ -223,10 +224,10 @@ class Lesson(models.Model):
     This object represents a  single Lesson in the timetable.
 
     Attributes:
-        unit (:class: `timetable.models.Unit`): The unit to be taught
-        venue (:class: `timetable.models.Venue`): Where the unit will be taught
+        unit (:class:`timetable.models.Unit`): The unit to be taught
+        venue (:class:`timetable.models.Venue`): Where the unit will be taught
         type (int): 'Theory' or 'Practical'. Set to 'Theory' by default.
-        period (:class: `timetable.models.Period`): The period, as in start and stop
+        period (:class:`timetable.models.Period`): The period, as in start and stop
 
     The venue, type and period are nullable. This is a workaround about how django's foreign key
     relations work. If a reference object was deleted, it would delete the Lesson. So, with
@@ -250,7 +251,8 @@ class Lesson(models.Model):
         """
         Allows me to access the lecturer as a property of the lesson
 
-        Returns: :class:`timetable.models.Lecturer`
+        Returns:
+            timetable.models.Lecturer
         """
         return self.unit.lecturer
 
@@ -282,7 +284,8 @@ def lesson_post_delete_callback(sender, **kwargs):
             'instance' key word argument. It represents the particular instance
             that is to be deleted.
 
-    Returns: None
+    Returns:
+        None
 
     """
     try:
@@ -309,12 +312,12 @@ class StudentClass(models.Model):
     Each :class: `timetable.models.Student` has to belong to a :class: `timetable.models.StudentClass`.
 
     Attributes:
-        year (int): The class's year, as represented in the `YEAR` tuple.
-        semester (int): The current semester, as represented in the `SEMESTER` tuple.
-        course (:class: `timetable.models.Course`): The course to which the class belongs.
-        units (:class: `timetable.models.Unit`): Represents the units that the class has
+        year (:class:`models.IntegerField`): The class's year, as represented in the `YEAR` tuple.
+        semester (:class:`models.IntegerField`): The current semester, as represented in the `SEMESTER` tuple.
+        course (:class:`timetable.models.Course`): The course to which the class belongs.
+        units (:class:`timetable.models.Unit`): Represents the units that the class has
             for the particular semester.
-        lessons (:class: `timetable.models.Lesson`): Represents the lessons that the class
+        lessons (:class:`timetable.models.Lesson`): Represents the lessons that the class
             has for the particular semester.
     """
     YEAR = (
@@ -357,13 +360,13 @@ class Student(models.Model):
     This object represents a student in campus.
 
     Attributes:
-        name (str): The student's name
-        mobile (Optional [str]): The student's mobile number
-        email (Optional [str]): The student's email address
-        student_class (:class: `timetable.models.StudentClass`): The class to which the student
+        name (:class:`models.CharField`): The student's name
+        mobile (Optional [:class:`models.CharField`]): The student's mobile number
+        email (Optional [:class:`models.EmailField`]): The student's email address
+        student_class (:class:`timetable.models.StudentClass`): The class to which the student
             belongs
-        username (Optional [str]): The student's Telegram username
-        chat_id (Optional [str]): The student's Telegram chat_id
+        username (Optional [:class:`models.CharField`]): The student's Telegram username
+        chat_id (Optional [:class:`models.CharField`]): The student's Telegram chat_id
 
     I am confused as to why I have some of the fields nullable
     """
@@ -385,9 +388,10 @@ class Student(models.Model):
         Caveat: Bulk create will not call this method.
 
         Implementing this method, for the same reasons as in the clean method
-        (:func: `~models.Lecture.__clean__`) of :class: `timetable.models.Lecturer`.
+        (:func:`timetable.models.Lecture.__clean__`) of :class:`timetable.models.Lecturer`.
 
-        Returns: None
+        Returns:
+             None
 
         """
         if not self.mobile:
