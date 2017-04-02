@@ -1,7 +1,4 @@
-"""
-Collection of functions, that for the meantime, I find not
-how to group or categorise them.
-"""
+"""This module contains utility functions that sort of interface between chats and models"""
 
 from timetable.models import Unit, Lesson, Student, Venue, Period, Lecturer
 import re
@@ -14,7 +11,7 @@ from telegram import ReplyKeyboardMarkup
 
 class StudentChatting(object):
     """
-    Object representing a student chatting. Interfaces chat and database models.
+    Object representing a student chatting. Interfaces a chat and database models.
 
     Attributes:
         student: an instance of the Student class from timetable.models

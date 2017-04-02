@@ -1,3 +1,4 @@
+# Coverage.py's config file
 [run]
 branch = True
 source = .
